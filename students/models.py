@@ -93,6 +93,6 @@ class TestParticipation(models.Model):
     marks = models.PositiveSmallIntegerField()
 
     def __str__(self):
-        return u'%s no. %s by %s' % (self.test_category,
-                                     self.test_number,
-                                     self.roll)
+        return u'%s number %d by %s' % (self.test.category,
+                              self.test.test_number,
+                              self.student.roll)
