@@ -10,7 +10,7 @@ class TestCategory(models.Model):
 class Test(models.Model):
     category = models.ForeignKey(TestCategory, null=False)
     test_number = models.PositiveSmallIntegerField(null=False)
-    test_description = models.TextField(null=True)
+    test_description = models.TextField(blank=True) # optional
 
     def __str__(self):
         return u'%s %d' % (self.category, self.test_number)
@@ -53,10 +53,11 @@ class Student(models.Model):
 
     roll = models.CharField(max_length=15, primary_key=True)
     name = models.CharField(max_length=30, null=False)
-    father_name = models.CharField(max_length=30) # optional
-    mother_name = models.CharField(max_length=30) # optional
+    father_name = models.CharField(max_length=30, blank=True) # optional
+    mother_name = models.CharField(max_length=30, blank=True) # optional
     blood_group = models.CharField(max_length=3,
-                                   choices=BLOOD_GROUPS)
+                                   choices=BLOOD_GROUPS,
+                                   blank=True) # optional
     contact_number = models.CharField(max_length=15, null=False)
     batch = models.ForeignKey(Batch, null=False)
     student_category = models.ForeignKey(StudentCategory, null=False)
@@ -71,14 +72,14 @@ class Student(models.Model):
     is_problematic = models.BooleanField()
 
     def __str__(self):
-        return u'%s; Roll:%s' % (self.name, self.roll)
+        return u'%s - %s' % (self.roll, self.name)
 
 class AttendanceRecord(models.Model):
     date = models.DateField(primary_key=True)
     attending_students = models.ManyToManyField(Student)
 
     def __str__(self):
-        return u'record for %s' % (self.date)
+        return u'Record for %s' % (self.date)
 
 class TestParticipation(models.Model):
     date = models.DateField(null=False)
