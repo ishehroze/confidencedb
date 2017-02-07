@@ -2,14 +2,14 @@ from django.db import models
 
 class TestCategory(models.Model):
     category = models.CharField(max_length=30, primary_key=True)
-    total_tests = models.PositiveSmallIntegerField(null=False)
+    total_tests = models.PositiveSmallIntegerField()
 
     def __str__(self):
         return u'%s' % (self.category)
 
 class Test(models.Model):
-    category = models.ForeignKey(TestCategory, null=False)
-    test_number = models.PositiveSmallIntegerField(null=False)
+    category = models.ForeignKey(TestCategory)
+    test_number = models.PositiveSmallIntegerField()
     test_description = models.TextField(blank=True) # optional
 
     def __str__(self):
@@ -58,15 +58,15 @@ class Student(models.Model):
     blood_group = models.CharField(max_length=3,
                                    choices=BLOOD_GROUPS,
                                    blank=True) # optional
-    contact_number = models.CharField(max_length=15, null=False)
-    batch = models.ForeignKey(Batch, null=False)
-    student_category = models.ForeignKey(StudentCategory, null=False)
-    admission_date = models.DateField(null=False)
-    expiration_date = models.DateField(null=False)
-    amount_total = models.IntegerField(null=False)
-    amount_paid = models.IntegerField(null=False)
+    contact_number = models.CharField(max_length=15)
+    batch = models.ForeignKey(Batch)
+    student_category = models.ForeignKey(StudentCategory)
+    admission_date = models.DateField()
+    expiration_date = models.DateField()
+    amount_total = models.IntegerField()
+    amount_paid = models.IntegerField()
     # amount_due is calculated, when paid, value is 0
-    due_date = models.DateField(null=False)
+    due_date = models.DateField()
     is_prospective = models.BooleanField()
     is_assistive = models.BooleanField()
     is_problematic = models.BooleanField()
@@ -82,10 +82,10 @@ class AttendanceRecord(models.Model):
         return u'Record for %s' % (self.date)
 
 class TestParticipation(models.Model):
-    date = models.DateField(null=False)
-    student_roll = models.ForeignKey(Student, null=False)
-    test = models.ForeignKey(Test, null=False)
-    marks = models.PositiveSmallIntegerField(null=False)
+    date = models.DateField()
+    student_roll = models.ForeignKey(Student)
+    test = models.ForeignKey(Test)
+    marks = models.PositiveSmallIntegerField()
 
     def __str__(self):
         return u'%s no. %s by %s' % (self.test_category,
