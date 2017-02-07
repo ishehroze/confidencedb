@@ -52,9 +52,13 @@ class Student(models.Model):
     )
 
     roll = models.CharField(max_length=15, primary_key=True)
-    name = models.CharField(max_length=30, null=False)
-    father_name = models.CharField(max_length=30, blank=True) # optional
-    mother_name = models.CharField(max_length=30, blank=True) # optional
+    name = models.CharField(max_length=30)
+    father_name = models.CharField(max_length=30,
+                                   blank=True,
+                                   verbose_name="father's name") # optional
+    mother_name = models.CharField(max_length=30,
+                                   blank=True,
+                                   verbose_name="mother's name") # optional
     blood_group = models.CharField(max_length=3,
                                    choices=BLOOD_GROUPS,
                                    blank=True) # optional
@@ -67,9 +71,9 @@ class Student(models.Model):
     amount_paid = models.IntegerField()
     # amount_due is calculated, when paid, value is 0
     due_date = models.DateField()
-    is_prospective = models.BooleanField()
-    is_assistive = models.BooleanField()
-    is_problematic = models.BooleanField()
+    is_prospective = models.BooleanField(verbose_name="prospective?")
+    is_assistive = models.BooleanField(verbose_name="assistive?")
+    is_problematic = models.BooleanField(verbose_name="problematic?")
 
     def __str__(self):
         return u'%s - %s' % (self.roll, self.name)
