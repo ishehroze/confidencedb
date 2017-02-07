@@ -7,6 +7,14 @@ class TestCategory(models.Model):
     def __str__(self):
         return u'%s' % (self.category)
 
+class Test(models.Model):
+    category = models.ForeignKey(TestCategory, null=False)
+    test_number = models.PositiveSmallIntegerField(null=False)
+    test_description = models.TextField()
+
+    def __str__(self):
+        return u'%s %d' % (self.category, self.test_number)
+
 class Batch(models.Model):
     batch_time = models.TimeField(primary_key=True)
 
@@ -75,8 +83,7 @@ class AttendanceRecord(models.Model):
 class TestParticipation(models.Model):
     date = models.DateField(null=False)
     student_roll = models.ForeignKey(Student, null=False)
-    test_category = models.ForeignKey(TestCategory, null=False)
-    test_number = models.PositiveSmallIntegerField(null=False)
+    test = models.ForeignKey(Test, null=False)
     marks = models.PositiveSmallIntegerField(null=False)
 
     def __str__(self):
