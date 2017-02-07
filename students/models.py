@@ -4,14 +4,26 @@ class TestCategory(models.Model):
     category = models.CharField(max_length=30, primary_key=True)
     total_tests = models.PositiveSmallIntegerField(null=False)
 
+    def __str__(self):
+        return u'%s' % (self.category)
+
 class Batch(models.Model):
     batch_time = models.TimeField(primary_key=True)
+
+    def __str__(self):
+        return u'%s' % (self.batch_time)
 
 class Department(models.Model):
     department_name = models.CharField(max_length=30, primary_key=True)
 
+    def __str__(self):
+        return u'%s' % (self.department_name)
+
 class StudentCategory(models.Model):
     student_category_name = models.CharField(max_length=2, primary_key=True)
+
+    def __str__(self):
+        return u'%s' % (self.student_category_name)
 
 class Student(models.Model):
     BLOOD_GROUPS = (
@@ -50,9 +62,15 @@ class Student(models.Model):
     is_assistive = models.BooleanField()
     is_problematic = models.BooleanField()
 
+    def __str__(self):
+        return u'%s; Roll:%s' % (self.name, self.roll)
+
 class AttendanceRecord(models.Model):
     date = models.DateField(primary_key=True)
     attending_students = models.ManyToManyField(Student)
+
+    def __str__(self):
+        return u'record for %s' % (self.date)
 
 class TestParticipation(models.Model):
     date = models.DateField(null=False)
@@ -60,3 +78,8 @@ class TestParticipation(models.Model):
     test_category = models.ForeignKey(TestCategory, null=False)
     test_number = models.PositiveSmallIntegerField(null=False)
     marks = models.PositiveSmallIntegerField(null=False)
+
+    def __str__(self):
+        return u'%s no. %s by %s' % (self.test_category,
+                                     self.test_number,
+                                     self.roll)
