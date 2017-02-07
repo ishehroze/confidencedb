@@ -1,3 +1,25 @@
 from django.contrib import admin
+from .models import (
+    TestCategory,
+    Test,
+    Batch,
+    Department,
+    StudentCategory,
+    Student,
+    AttendanceRecord,
+    TestParticipation
+)
 
-# Register your models here.
+models = (
+    TestCategory,
+    Test,
+    Batch,
+    Department,
+    StudentCategory,
+    Student,
+    AttendanceRecord,
+    TestParticipation
+)
+
+for model in models:
+    admin.site.register(model)
