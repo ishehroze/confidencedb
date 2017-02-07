@@ -88,7 +88,7 @@ class AttendanceRecord(models.Model):
 
 class TestParticipation(models.Model):
     date = models.DateField()
-    student_roll = models.ForeignKey(Student)
+    student = models.ForeignKey(Student)
     test = models.ForeignKey(Test)
     marks = models.PositiveSmallIntegerField()
 
