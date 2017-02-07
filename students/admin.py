@@ -42,6 +42,8 @@ class StudentAdmin(admin.ModelAdmin):
         ('Admission Related Info', {'fields': [
             'admission_date',
             'expiration_date',
+            'batch',
+            'student_category',
             'amount_total',
             'amount_paid',
             'due_date',
