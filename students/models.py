@@ -63,6 +63,7 @@ class Student(models.Model):
                                    choices=BLOOD_GROUPS,
                                    blank=True) # optional
     contact_number = models.CharField(max_length=15)
+    department = models.ForeignKey(Department)
     batch = models.ForeignKey(Batch)
     student_category = models.ForeignKey(StudentCategory)
     admission_date = models.DateField()
