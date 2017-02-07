@@ -10,7 +10,7 @@ class TestCategory(models.Model):
 class Test(models.Model):
     category = models.ForeignKey(TestCategory, null=False)
     test_number = models.PositiveSmallIntegerField(null=False)
-    test_description = models.TextField()
+    test_description = models.TextField(null=True)
 
     def __str__(self):
         return u'%s %d' % (self.category, self.test_number)
