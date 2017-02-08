@@ -7,6 +7,9 @@ class TestCategory(models.Model):
     def __str__(self):
         return u'%s' % (self.category)
 
+    class Meta:
+        verbose_name_plural = "test categories"
+
 class Test(models.Model):
     category = models.ForeignKey(TestCategory)
     test_number = models.PositiveSmallIntegerField()
@@ -21,6 +24,9 @@ class Batch(models.Model):
     def __str__(self):
         return u'%s' % (self.batch_time)
 
+    class Meta:
+        verbose_name_plural = "batches"
+
 class Department(models.Model):
     department_name = models.CharField(max_length=30, primary_key=True)
 
@@ -32,6 +38,9 @@ class StudentCategory(models.Model):
 
     def __str__(self):
         return u'%s' % (self.student_category_name)
+
+    class Meta:
+        verbose_name_plural = "student categories"
 
 class Student(models.Model):
     BLOOD_GROUPS = (
