@@ -1,6 +1,21 @@
 from django.db import models
 from datetime import date
 
+MONTH_MAPPING = {
+    1: 'Jan',
+    2: 'Feb',
+    3: 'Mar',
+    4: 'Apr',
+    5: 'May',
+    6: 'Jun',
+    7: 'Jul',
+    8: 'Aug',
+    9: 'Sep',
+    10: 'Oct',
+    11: 'Nov',
+    12: 'Dec'
+}
+
 class TestCategory(models.Model):
     category = models.CharField(max_length=30, primary_key=True)
     total_tests = models.PositiveSmallIntegerField()
@@ -88,6 +103,15 @@ class Student(models.Model):
 
     def __str__(self):
         return u'%s - %s' % (self.roll, self.name)
+
+    def expiration_info(self):
+        if self.expiration_date < date.today():
+            return "EXPIRED"
+        else:
+            month = MONTH_MAPPING[self.expiration_date.month]
+            year = self.expiration_date.year
+
+            return "%s %d" % (month, year)
 
     def due_info(self):
         if self.amount_total == self.amount_paid:

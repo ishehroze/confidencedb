@@ -11,13 +11,14 @@ from .models import (
 )
 
 class StudentAdmin(admin.ModelAdmin):
-    readonly_fields = ('due_info',)
+    readonly_fields = ('expiration_info', 'due_info',)
 
     list_display = (
         'roll',
         'name',
-        'contact_number',
         'department',
+        'contact_number',
+        'expiration_info',
         'due_info',
         'is_prospective',
         'is_assistive',
