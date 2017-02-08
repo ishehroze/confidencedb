@@ -11,20 +11,32 @@ from .models import (
 )
 
 class StudentAdmin(admin.ModelAdmin):
+    readonly_fields = ('due_info',)
+
     list_display = (
         'roll',
         'name',
-        'student_category',
-        'due_date',
         'contact_number',
+        'department',
+        'due_info',
+        'is_prospective',
+        'is_assistive',
     )
+
+    list_editable = (
+        'is_prospective',
+        'is_assistive',
+    )
+
     list_filter = (
         'due_date',
+        'department',
         'student_category',
         'batch',
         'is_prospective',
         'is_assistive',
     )
+
     search_fields = ('roll', 'name',)
 
     fieldsets = [

@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 
 class TestCategory(models.Model):
     category = models.CharField(max_length=30, primary_key=True)
@@ -81,12 +82,22 @@ class Student(models.Model):
     amount_paid = models.IntegerField()
     # amount_due is calculated, when paid, value is 0
     due_date = models.DateField()
-    is_prospective = models.BooleanField(verbose_name="prospective?")
-    is_assistive = models.BooleanField(verbose_name="assistive?")
-    is_problematic = models.BooleanField(verbose_name="problematic?")
+    is_prospective = models.BooleanField(verbose_name="prospective")
+    is_assistive = models.BooleanField(verbose_name="assistive")
+    is_problematic = models.BooleanField(verbose_name="problematic")
 
     def __str__(self):
         return u'%s - %s' % (self.roll, self.name)
+
+    def due_info(self):
+        if self.amount_total == self.amount_paid:
+            return "Paid"
+        else:
+            if self.due_date < date.today():
+                return "OVERDUE"
+            else:
+                return "%s (tk. %d)" % (self.due_date,
+                                        self.amount_total - self.amount_paid)
 
 class AttendanceRecord(models.Model):
     date = models.DateField(primary_key=True)
