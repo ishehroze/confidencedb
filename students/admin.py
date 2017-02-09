@@ -1,4 +1,7 @@
 from django.contrib import admin
+from datetime import date
+from django.utils.translation import ugettext_lazy as _
+from django.db.models import F
 from .models import (
     TestCategory,
     Test,
@@ -19,27 +22,47 @@ def make_paid(modelAdmin, request, queryset):
 
 make_paid.short_description = "Mark selected as Paid"
 
+class StatusFilter(admin.SimpleListFilter):
+    title = _('status')
+    parameter_name = 'status'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('overdue', _('Overdue')),
+            ('paid', _('Payment Cleared')),
+            ('expired', _('Expired'))
+        )
+
+    def queryset(self, request, queryset):
+        today = date.today()
+
+        if self.value() == 'overdue':
+            return queryset.filter(due_date__gt=today)\
+                .exclude(amount_paid=F('amount_total'))\
+                .exclude(expiration_date__lt=today)
+
+        if self.value() == 'paid':
+            return queryset.filter(amount_paid=F('amount_total'))\
+                .exclude(expiration_date__lt=today)
+
+        if self.value() == 'expired':
+            return queryset.filter(expiration_date__lt=today)
+
 class StudentAdmin(admin.ModelAdmin):
-    readonly_fields = ('expiration_info', 'due_info',)
+    readonly_fields = ('payment_info',)
 
     list_display = (
         'roll',
         'name',
         'department',
         'contact_number',
-        'expiration_info',
-        'due_info',
-        'is_prospective',
-        'is_assistive',
-    )
-
-    list_editable = (
+        'payment_info',
         'is_prospective',
         'is_assistive',
     )
 
     list_filter = (
-        'due_date',
+        StatusFilter,
         'department',
         'student_category',
         'batch',

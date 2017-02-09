@@ -104,24 +104,19 @@ class Student(models.Model):
     def __str__(self):
         return u'%s - %s' % (self.roll, self.name)
 
-    def expiration_info(self):
+    def payment_info(self):
         if self.expiration_date < date.today():
             return "EXPIRED"
-        else:
-            month = MONTH_MAPPING[self.expiration_date.month]
-            year = self.expiration_date.year
-
-            return "%s %d" % (month, year)
-
-    def due_info(self):
-        if self.amount_total == self.amount_paid:
+        elif self.amount_total == self.amount_paid:
             return "Paid"
         else:
             if self.due_date < date.today():
                 return "OVERDUE"
             else:
-                return "%s (tk. %d)" % (self.due_date,
-                                        self.amount_total - self.amount_paid)
+                return "%s (tk. %d)" % (
+                    self.due_date,
+                    self.amount_total - self.amount_paid
+                )
 
 class AttendanceRecord(models.Model):
     date = models.DateField(primary_key=True)
