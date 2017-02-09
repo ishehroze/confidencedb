@@ -10,6 +10,8 @@ from .models import (
     TestParticipation
 )
 
+admin.site.disable_action('delete_selected')
+
 def make_paid(modelAdmin, request, queryset):
     for obj in queryset:
         obj.amount_paid = obj.amount_total
