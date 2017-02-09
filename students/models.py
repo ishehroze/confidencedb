@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from datetime import date
 
 MONTH_MAPPING = {
@@ -104,6 +105,9 @@ class Student(models.Model):
     def __str__(self):
         return u'%s - %s' % (self.roll, self.name)
 
+    def get_absolute_url(self):
+        return ('students.views.details', args=[(str(self.roll))])
+
     def payment_info(self):
         if self.expiration_date < date.today():
             return "EXPIRED"
@@ -124,6 +128,12 @@ class AttendanceRecord(models.Model):
 
     def __str__(self):
         return u'Record for %s' % (self.date)
+
+    def get_absolute_url(self):
+        return reverse('students.views.test_participation',
+                       args=[str(self.date.day),
+                             str(self.date.month),
+                             str(self.date.year)])
 
 class TestParticipation(models.Model):
     date = models.DateField()

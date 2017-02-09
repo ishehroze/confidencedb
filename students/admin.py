@@ -145,7 +145,7 @@ class StudentAdmin(admin.ModelAdmin):
         ]}),
     ]
 
-    actions = [make_paid]
+    actions = (make_paid,)
 
 class AttendanceRecordAdmin(admin.ModelAdmin):
     list_filter = ('date',)
@@ -154,6 +154,7 @@ class AttendanceRecordAdmin(admin.ModelAdmin):
 class TestParticipationAdmin(admin.ModelAdmin):
     list_display = ('student', 'test', 'marks')
     list_filter = ('date',)
+    raw_id_fields = ('student',)
 
 admin.site.register(TestCategory)
 admin.site.register(Test)
