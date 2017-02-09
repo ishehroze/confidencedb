@@ -73,22 +73,22 @@ class StudentAdmin(admin.ModelAdmin):
     search_fields = ('roll', 'name',)
 
     fieldsets = [
-        ('Primary Info', {'fields': [
+        ('Admission Info', {'fields': [
             'roll',
             'name',
             'department',
             'contact_number',
+            'admission_date',
+            'batch',
         ]}),
         ('Personal Info', {'fields': [
             'father_name',
             'mother_name',
             'blood_group',
         ]}),
-        ('Admission Related Info', {'fields': [
-            'admission_date',
-            'expiration_date',
-            'batch',
+        ('Payment Info', {'fields': [
             'student_category',
+            'expiration_date',
             'amount_total',
             'amount_paid',
             'due_date',
