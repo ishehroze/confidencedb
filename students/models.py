@@ -106,7 +106,7 @@ class Student(models.Model):
         return u'%s - %s' % (self.roll, self.name)
 
     def get_absolute_url(self):
-        return ('students.views.details', args=[(str(self.roll))])
+        return reverse('students.views.details', args=[(str(self.roll))])
 
     def payment_info(self):
         if self.expiration_date < date.today():
