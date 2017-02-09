@@ -10,6 +10,13 @@ from .models import (
     TestParticipation
 )
 
+def make_paid(modelAdmin, request, queryset):
+    for obj in queryset:
+        obj.amount_paid = obj.amount_total
+        obj.save()
+
+make_paid.short_description = "Mark selected as Paid"
+
 class StudentAdmin(admin.ModelAdmin):
     readonly_fields = ('expiration_info', 'due_info',)
 
@@ -67,6 +74,8 @@ class StudentAdmin(admin.ModelAdmin):
             'is_problematic',
         ]}),
     ]
+
+    actions = [make_paid]
 
 class AttendanceRecordAdmin(admin.ModelAdmin):
     list_filter = ('date',)
