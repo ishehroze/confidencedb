@@ -1,0 +1,55 @@
+/* Adjustment */
+body { margin-top: 80px; }
+nav.col-xs-12.col-md-9 { margin-bottom: 10px; }
+
+/* List Groups */
+h4.list-group-item-heading { font-size: 1em; font-weight: bold; }
+.list-group-item-default h4.list-group-item-heading { color: slategray; }
+.list-group-item-default .list-group-item-text { color: dimgray; }
+
+/* Panels */
+.panel-title { font-size: 1em; font-weight: bold; }
+
+/* Table */
+h4.table-title { margin-bottom: 1.5em; }
+table.detail { margin-bottom: 1em; }
+table.detail tr th, table.detail tr td { border: 0px; }
+table.detail tr th { color: slategray; }
+table.detail tr td { color: dimgray; }
+
+/* Dropdown */
+.dropdown:hover { background: #E7E7E7; }
+.dropdown:hover .dropdown-menu { display: block; }
+
+/* Icon */
+.glyphicon.true { color: darkgreen; }
+.glyphicon.false { color: crimson; }
+
+/* Calendar */
+.inactive { color: #e8eaef; }
+.calendar { height: auto; margin-bottom: 30px; box-shadow: 0 0 1px #add2e4; border-radius: 4px; }
+.calendar-header, .calendar-footer { text-align: center; margin: 0; font-weight: bold; }
+.calendar-header { background-color: #add2e4; color: white; padding: 4% 0 4%; border-top-right-radius: 4px; border-top-left-radius: 4px; }
+.calendar-title { text-transform: uppercase; }
+.calendar-body table { border: none; width: 90%; margin: 0 auto 0; }
+.calendar-body table td, .calendar-body table th { text-align: right; padding: 3% 5% 3% 3%; }
+.weekdays th { color: #add2e4; font-weight: bold; }
+.calendar-body td a { color: #7d7e82; }
+.calendar-body td a:hover { text-decoration: none; }
+.calendar-body td.active a { font-weight: bold; color: #d7ecf7; }
+.calendar-footer { color: #add2e4; padding: 3% 0 3%; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px;}
+.calendar-body td.admission-date a, .calendar-body td.expiry-date a { font-weight: bold; }
+.calendar-body td.admission-date a { color: #3c763d; }
+.calendar-body td.expiry-date, .calendar-body td.expiry-date a { color: #a94442; }
+#today { border-radius: 0.1em; background-color: #add2e4; }
+#today a { font-weight: bold; color: white; }
+#today.admission-date { background-color: #dff0d8; }
+#today.expiry-date { background-color: #f2dede; }
+
+/* Future Calendar */
+.calendar.calendar-future { box-shadow: none; }
+.calendar-future .calendar-header, .calendar-future .calendar-footer { background-color: rgba(85, 138, 165, 0.15); }
+.calendar-future .calendar-footer { opacity: 0; }
+.calendar-future .weekdays th { color: rgba(173, 210, 228, 0.39); }
+.calendar-future .inactive { color: rgba(232, 234, 239, 0.31); }
+.calendar-future td a { color: #e8eaef; }

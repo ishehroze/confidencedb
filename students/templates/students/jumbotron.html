@@ -1,0 +1,8 @@
+{% extends './base.html' %}
+
+{% block container %}
+  <div class="jumbotron">
+    <h1>{% block heading %}Welcome{% endblock %}</h1>
+    <p>{% block message %} Enter roll number in the search bar to view details about student or sign in for administration {% endblock message %}</p>
+  </div>
+{% endblock container %}

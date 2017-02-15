@@ -1,0 +1,35 @@
+{% extends '../base.html' %}
+
+{% block title %}Details for 121445{% endblock %}
+
+{% block container %}
+<div class="row">
+  {% include './_breadcrumb.html' %}
+  <nav class="col-xs-12 col-md-9">
+    <ul class="nav nav-tabs">
+      <li role="presentation" {% block details_active %}{% endblock %}>
+        <a href="/students/000000/">Details</a>
+      </li>
+      <li role="presentation" {% block attendances_active %}{% endblock %}>
+        <a href="/students/000000/attendances">Attendences</a>
+      </li>
+      <li role="presentation" {% block tests_active %}{% endblock %}>
+        <a href="/students/000000/tests">Tests</a>
+      </li>
+      <li role="presentation" {% block sheets_active %}{% endblock %}>
+        <a href="/students/000000/sheets">Sheets</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+<div class="clearfix">
+</div>
+<div class="row">
+  <div class="col-xs-12 col-md-3">
+    {% include './_sidebars.html' %}
+  </div>
+  <div class="col-xs-12 col-md-9">
+    {% block content %}{% endblock %}
+  </div>
+</div>
+{% endblock container %}

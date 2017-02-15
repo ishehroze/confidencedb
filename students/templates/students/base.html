@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Homepage{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'students/css/bootstrap.min.css' %}">
+  {% block styles %}{% endblock %}
+  <link rel="stylesheet" href="{% static 'students/css/style.css' %}">
+</head>
+<body>
+  {% include './_topnav.html' %}
+  <div class="container">
+    {% block container %}{% endblock %}
+  </div>
+  <script src="{% static 'students/js/jquery.min.js' %}"></script>
+  <script src="{% static 'students/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'students/js/bootstrap.min.js' %}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>
