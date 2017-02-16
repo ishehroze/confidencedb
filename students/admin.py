@@ -8,20 +8,26 @@ from .models import (
     Batch,
     Department,
     StudentCategory,
+    SheetCategory,
+    Sheet,
     Student,
     AttendanceRecord,
-    TestParticipation
+    TestParticipation,
+    SheetDistribution
 )
 
+# Removing 'delete_selected' from admin page
 admin.site.disable_action('delete_selected')
 
+# Custom action 'make_paid' for admin change list
 def make_paid(modelAdmin, request, queryset):
     for obj in queryset:
         obj.amount_paid = obj.amount_total
         obj.save()
+make_paid.short_description = _("Mark selected as Paid")
 
-make_paid.short_description = "Mark selected as Paid"
 
+# Custom Filters
 class StatusFilter(admin.SimpleListFilter):
     title = _('status')
     parameter_name = 'status'
@@ -92,17 +98,17 @@ class BloodGroupFilter(admin.SimpleListFilter):
         else:
             return queryset
 
-class StudentAdmin(admin.ModelAdmin):
-    readonly_fields = ('payment_info',)
 
+# Model Admins and registration
+@admin.register(Student)
+class StudentAdmin(admin.ModelAdmin):
     list_display = (
         'roll',
         'name',
         'department',
         'contact_number',
-        'payment_info',
-        'is_prospective',
-        'is_assistive',
+        'is_overdue',
+        'is_expired',
     )
 
     list_filter = (
@@ -147,10 +153,12 @@ class StudentAdmin(admin.ModelAdmin):
 
     actions = (make_paid,)
 
+@admin.register(AttendanceRecord)
 class AttendanceRecordAdmin(admin.ModelAdmin):
     list_filter = ('date',)
     filter_horizontal = ('attending_students',)
 
+@admin.register(TestParticipation)
 class TestParticipationAdmin(admin.ModelAdmin):
     list_display = ('student', 'test', 'marks')
     list_filter = ('date',)
@@ -161,6 +169,5 @@ admin.site.register(Test)
 admin.site.register(Batch)
 admin.site.register(Department)
 admin.site.register(StudentCategory)
-admin.site.register(Student, StudentAdmin)
-admin.site.register(AttendanceRecord, AttendanceRecordAdmin)
-admin.site.register(TestParticipation, TestParticipationAdmin)
+admin.site.register(SheetCategory)
+admin.site.register(Sheet)
