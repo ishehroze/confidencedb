@@ -1,7 +1,9 @@
 from django.db import models
-from django.urls import reverse
+from django.urls import reverse_lazy
 from datetime import date
 from django.utils.translation import ugettext_lazy as _
+from django.core.exceptions import ObjectDoesNotExist
+from collections import defaultdict
 
 MONTH_MAPPING = {
     1: 'Jan',
@@ -137,7 +139,6 @@ class Student(models.Model):
     expiration_date = models.DateField()
     amount_total = models.IntegerField()
     amount_paid = models.IntegerField()
-    # amount_due is calculated, when paid, value is 0
     due_date = models.DateField()
     is_prospective = models.BooleanField(verbose_name=_("prospective"))
     is_assistive = models.BooleanField(verbose_name=_("well-wisher"))
@@ -149,50 +150,126 @@ class Student(models.Model):
             "name": self.name,
         }
 
-    def get_absolute_url(self):
-        return reverse('students.views.details', args=[(str(self.roll))])
+    def get_absolute_url(self): 
+        return reverse_lazy('students:details', args=[(str(self.roll))])
 
-    def is_overdue(self):
-        if self.due_date < date.today():
-            return True
-        else:
-            return False
-
-    def is_expired_property(self):
+    def is_expired(self):
         if self.expiration_date < date.today():
             return True
         else:
             return False
 
-    is_expired_property.short_description = _("expired")
-    is_expired = property(is_expired_property)
+    is_expired.boolean = True
+    is_expired.short_description = _("expired")
 
-    def is_payment_cleared_property(self):
+    def is_payment_cleared(self):
         if self.amount_total == self.amount_paid:
             return True
         else:
             return False
 
-    is_payment_cleared_property.short_description = _("payment complete")
-    is_payment_cleared = property(is_payment_cleared_property)
+    def is_overdue(self):
+        if self.is_payment_cleared():
+            return False
+        elif self.due_date < date.today():
+            return True
+        else:
+            return False
 
-    class Meta:
-        ordering = ["roll"]
+    def payment_status(self):
+        if self.is_expired():
+            return None
+        elif self.is_overdue():
+            return False
+        elif self.is_payment_cleared():
+            return True
+        else:
+            return None
+
+    payment_status.boolean = True
+    payment_status.short_description = _("payment status")
+
+    def validity_days(self):
+        delta = self.expiration_date - date.today()
+        return delta.days if delta.days >= 0 else 0
+
+    validity_days.short_description = _("days to expiration")
+
+    def amount_due(self):
+        return self.amount_total - self.amount_paid
+
+    def attending_dates(self):
+        return self.attendance_record_set.all().values_list('date', 
+            flat=True)
+
+    def attending_dates_breakdown(self):
+        attending_dates = self.attending_dates()
+
+        breakdown_by_months = {}
+
+        for attending_date in attending_dates:
+            month_dt = date(
+                month = attending_date.month,
+                year = attending_date.year,
+                day = 1
+            )
+            
+            try: 
+                breakdown_by_months[month_dt].append(
+                    attending_date)
+            except KeyError:
+                breakdown_by_months[month_dt] = \
+                    [attending_date]
+
+        return breakdown_by_months
+
+    def test_participations_breakdown(self):
+        participations = self.test_participation_set.all()
+        categories = TestCategory.objects.all().values_list(
+            'category', flat=True)
+
+        participations_by_category = {
+            category: participations.filter(
+                    test__category=category
+                ) for category in categories
+        }
+
+        return participations_by_category
+
+    def sheets_received_breakdown(self):
+        categories = SheetCategory.objects.all().values_list(
+                'category', flat=True)
+
+        sheets_by_category = {
+            category: [] for category in categories
+        }
+
+        try: 
+            receipts = self.received_sheets.sheets.all()
+            
+            for category in sheets_by_category:
+                sheets_by_category[category] = \
+                    receipts.filter(category=category)
+
+            return sheets_by_category
+        
+        except ObjectDoesNotExist:
+            return sheets_by_category
 
 class AttendanceRecord(models.Model):
-    date = models.DateField(primary_key=True)
-    attending_students = models.ManyToManyField(Student)
+    date = models.DateField(primary_key=True, default=date.today)
+    students = models.ManyToManyField(Student,
+        related_name='attendance_record_set')
 
     def __str__(self):
         return u'Record for %s' % (self.date)
 
-    class Meta:
-        ordering = ["date"]
-
 class TestParticipation(models.Model):
     date = models.DateField()
-    student = models.ForeignKey(Student)
-    test = models.ForeignKey(Test)
+    student = models.ForeignKey(Student,
+        related_name='test_participation_set')
+    test = models.ForeignKey(Test,
+        related_name='test_participation_set')
     marks = models.PositiveSmallIntegerField()
 
     def __str__(self):
@@ -202,15 +279,10 @@ class TestParticipation(models.Model):
             "roll": self.student.roll,
         }
 
-    class Meta:
-        ordering = ["student", "test"]
-
-class SheetDistribution(models.Model):
-    student = models.OneToOneField(Student)
-    sheet = models.ManyToManyField(SheetCategory)
+class SheetReception(models.Model):
+    student = models.OneToOneField(Student,
+        related_name='received_sheets')
+    sheets = models.ManyToManyField(Sheet)
 
     def __str__(self):
         return '%s' % (self.student)
-
-    class Meta:
-        ordering = ["student"]

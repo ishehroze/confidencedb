@@ -1,28 +1,46 @@
 <div class="list-group">
-  <div class="list-group-item list-group-item-danger">
-    <h4 class="list-group-item-heading">Overdue Amount</h4>
-    <div class="list-group-item-text">tk. 5000</div>
-  </div>
+  {% if student.is_payment_cleared %} {# Do nothing #}
+  {% elif student.is_overdue and not student.is_expired %} {# Danger - Show Overdue with amount #}
+    <div class="list-group-item list-group-item-danger">
+      <h4 class="list-group-item-heading">Overdue</h4>
+      <div class="list-group-item-text">tk. {{ student.amount_due }}</div>
+    </div>
+  {% elif not student.is_expired %} {# Warning - Show Due date with amount #}
+    <div class="list-group-item list-group-item-warning">
+      <h4 class="list-group-item-heading">Due ({{ student.due_date|date:"M d, Y" }})</h4> {# ***TODO*** #}
+      <div class="list-group-item-text">tk. {{ student.amount_due }}</div>
+    </div>
+  {% else %} {# Do nothing (expired) #}
+  {% endif %}
+  {% if student.is_expired %}
+    <div class="list-group-item list-group-item-danger">
+      <h4 class="list-group-item-heading">Expired</h4>
+      <div class="list-group-item-text">{{ student.expiration_date|date:"M d, Y" }}</div>
+    </div>
+  {% else %}
+    <div class="list-group-item list-group-item-default">
+      <h4 class="list-group-item-heading">Validity</h4>
+      <div class="list-group-item-text">{{ student.validity_days }} days</div>
+    </div>
+  {% endif %}
   <div class="list-group-item list-group-item-default">
     <h4 class="list-group-item-heading">Total Fee</h4>
-    <div class="list-group-item-text">tk. 15000</div>
-  </div>
-  <div class="list-group-item list-group-item-default">
-    <h4 class="list-group-item-heading">Validity</h4>
-    <div class="list-group-item-text">120 days</div>
+    <div class="list-group-item-text">tk. {{ student.amount_total }}</div>
   </div>
 </div>
 <div class="list-group">
   <div class="list-group-item list-group-item-default">
     <h4 class="list-group-item-heading">Student Category</h4>
-    <p class="list-group-item-text">C2</p>
+    <p class="list-group-item-text">{{ student.student_category|upper }}</p>
   </div>
   <div class="list-group-item list-group-item-default">
     <h4 class="list-group-item-heading">Department</h4>
-    <p class="list-group-item-text">Other</p>
+    <p class="list-group-item-text">{{ student.department }}</p>
   </div>
+  
+
   <div class="list-group-item list-group-item-default">
     <h4 class="list-group-item-heading">Batch</h4>
-    <p class="list-group-item-text">09:00 am</p>
+    <p class="list-group-item-text">{{ student.batch.batch_time|time:"g:i A" }}</p>
   </div>
 </div>

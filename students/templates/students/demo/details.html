@@ -1,6 +1,6 @@
 {% extends './demo_base.html' %}
 
-{% block title %}Details for 121445{% endblock %}
+{% block title %}{{ student.roll }} | Details{% endblock %}
 
 {% block details_active %}class="active"{% endblock %}
 
@@ -13,23 +13,66 @@
     <table class="table detail">
       <tr>
         <th class="col-xs-6 col-md-4">Name</th>
-        <td class="col-xs-6 col-md-8">Shehroze Islam</td>
+        <td class="col-xs-6 col-md-8">{{ student.name }}</td>
       </tr>
       <tr>
         <th class="col-xs-6 col-md-4">Roll</th>
-        <td class="col-xs-6 col-md-8">121445</td>
+        <td class="col-xs-6 col-md-8">{{ student.roll }}</td>
       </tr>
       <tr>
         <th class="col-xs-6 col-md-4">Admission date</th>
-        <td class="col-xs-6 col-md-8">June 7, 2017</td>
+        <td class="col-xs-6 col-md-8">{{ student.admission_date|date:"M d, Y" }}</td>
       </tr>
-      <tr>
-        <th class="col-xs-6 col-md-4">Contact number</th>
-        <td class="col-xs-6 col-md-8">01773397780</td>
-      </tr>
+      {% if user.is_authenticated %}
+        <tr>
+          <th class="col-xs-6 col-md-4">Contact number</th>
+          <td class="col-xs-6 col-md-8">{{ student.contact_number }}</td>
+        </tr>
+      {% endif %}
     </table>
   </div>
 </div>
+{% if user.is_authenticated %}
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      <div class="panel-title">Additional Info</div>
+    </div>
+    <div class="panel-body">
+      <table class="table detail">
+        <tr>
+          <th class="col-xs-6 col-md-4">Prospective</th>
+          <td class="col-xs-6 col-md-8">
+            {% if student.is_prospective %}
+            <span class="glyphicon glyphicon-ok true"></span>
+            {% else %}
+            <span class="glyphicon glyphicon-remove false"></span>
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th class="col-xs-6 col-md-4">Well-wisher</th>
+          <td class="col-xs-6 col-md-8">
+            {% if student.is_assistive %}
+            <span class="glyphicon glyphicon-ok true"></span>
+            {% else %}
+            <span class="glyphicon glyphicon-remove false"></span>
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th class="col-xs-6 col-md-4">Problematic</th>
+          <td class="col-xs-6 col-md-8">
+            {% if student.is_problematic %}
+            <span class="glyphicon glyphicon-ok true"></span>
+            {% else %}
+            <span class="glyphicon glyphicon-remove false"></span>
+            {% endif %}
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+{% endif %}  
 <div class="panel panel-info">
   <div class="panel-heading">
     <div class="panel-title">Personal Info</div>
@@ -38,42 +81,27 @@
     <table class="table detail">
       <tr>
         <th class="col-xs-6 col-md-4">Father's name</th>
-        <td class="col-xs-6 col-md-8">Nazrul Islam</td>
+        {% if student.father_name %}
+        <td class="col-xs-6 col-md-8">{{ student.father_name }}</td>
+        {% else %}
+        <td class="col-xs-6 col-md-8 na">N/A</td>
+        {% endif %}    
       </tr>
       <tr>
         <th class="col-xs-6 col-md-4">Mother's name</td>
-        <td class="col-xs-6 col-md-8">Sabera Sultana</td>
+        {% if student.mother_name %}
+        <td class="col-xs-6 col-md-8">{{ student.mother_name }}</td>
+        {% else %}
+        <td class="col-xs-6 col-md-8 na">N/A</td>
+        {% endif %}
       </tr>
       <tr>
         <th class="col-xs-6 col-md-4">Blood group</th>
-        <td class="col-xs-6 col-md-8">O+</td>
-      </tr>
-    </table>
-  </div>
-</div>
-<div class="panel panel-info">
-  <div class="panel-heading">
-    <div class="panel-title">Others</div>
-  </div>
-  <div class="panel-body">
-    <table class="table detail">
-      <tr>
-        <th class="col-xs-6 col-md-4">Prospective</th>
-        <td class="col-xs-6 col-md-8">
-          <span class="glyphicon glyphicon-remove false"></span>
-        </td>
-      </tr>
-      <tr>
-        <th class="col-xs-6 col-md-4">Assistive</th>
-        <td class="col-xs-6 col-md-8">
-          <span class="glyphicon glyphicon-remove false"></span>
-        </td>
-      </tr>
-      <tr>
-        <th class="col-xs-6 col-md-4">Problematic</th>
-        <td class="col-xs-6 col-md-8">
-          <span class="glyphicon glyphicon-ok true"></span>
-        </td>
+        {% if student.blood_group %}
+        <td class="col-xs-6 col-md-8">{{ student.blood_group|upper }}</td>
+        {% else %}
+        <td class="col-xs-6 col-md-8 na">N/A</td>
+        {% endif %}        
       </tr>
     </table>
   </div>

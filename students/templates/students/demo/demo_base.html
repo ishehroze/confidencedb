@@ -8,17 +8,22 @@
   <nav class="col-xs-12 col-md-9">
     <ul class="nav nav-tabs">
       <li role="presentation" {% block details_active %}{% endblock %}>
-        <a href="/students/121445/">Details</a>
+        <a href="{% url 'students:details' student.roll %}">Details</a>
       </li>
       <li role="presentation" {% block attendances_active %}{% endblock %}>
-        <a href="/students/121445/attendances">Attendences</a>
+        <a href="{% url 'students:attendences' student.roll %}">Attendences</a>
       </li>
-      <li role="presentation" {% block tests_active %}{% endblock %}>
-        <a href="/students/121445/tests">Tests</a>
+      <li role="" {% block tests_active %}{% endblock %}>
+        <a href="{% url 'students:tests' student.roll %}">Tests</a>
       </li>
       <li role="presentation" {% block sheets_active %}{% endblock %}>
-        <a href="/students/121445/sheets">Sheets</a>
+        <a href="{% url 'students:sheets' student.roll %}">Sheets</a>
       </li>
+      {% if user.is_authenticated %}
+        <li role="presentation">
+          <a href="{% url 'admin:students_student_change' student.roll %}">Edit</a>
+        </li>
+      {% endif %}
     </ul>
   </nav>
 </div>

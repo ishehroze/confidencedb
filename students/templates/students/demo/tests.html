@@ -1,121 +1,46 @@
 {% extends './demo_base.html' %}
 
-{% block title %}Test Info for 121445{% endblock %}
+{% block title %}{{ student.roll }} | Test Info{% endblock %}
 
 {% block tests_active %}class="active"{% endblock %}
 
 {% block content %}
+
 <div class="panel-group">
-  <div class="panel panel-info" data-toggle="collapse" href="#evaluation">
-    <div class="panel-heading">
-      <div class="panel-title pull-left">
-        Evaluation Tests
+{% for category, test_participations in student.test_participations_breakdown.items %}
+  {% if test_participations %}
+    <div class="panel panel-info" data-toggle="collapse" href="#{{ category|cut:" "|lower }}">
+      <div class="panel-heading">
+        <div class="panel-title pull-left">
+          {{ category|title }}
+        </div>
+        <span class="badge pull-right">{{ test_participations|length }}</span>
+        <div class="clearfix"></div>
       </div>
-      <span class="badge pull-right">3</span>
-      <div class="clearfix"></div>
-    </div>
-    <div id="evaluation" class="panel-body collapse">
-      <table class="table table-condensed detail">
-        <tr>
-          <th>#</th>
-          <th>Description</th>
-          <th>Obtained Marks</th>
-          <th>Date</th>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>No Description</td>
-          <td>59</td>
-          <td>July 2, 2017</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>No Description</td>
-          <td>59</td>
-          <td>July 2, 2017</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>No Description</td>
-          <td>59</td>
-          <td>July 2, 2017</td>
-        </tr>
-      </table>
-    </div>
-  </div>
-  <div class="panel panel-info" data-toggle="collapse" href="#jst">
-    <div class="panel-heading">
-      <div class="panel-title pull-left">
-        JST Tests
+      <div id="{{ category|cut:" "|lower }}" class="panel-body collapse">
+        <table class="table table-condensed detail">
+          <tr>
+            <th>#</th>
+            <th>Description</th>
+            <th>Obtained Marks</th>
+            <th>Date</th>
+          </tr>
+          {% for test_participation in test_participations %}
+            <tr>
+              <td>{{ test_participation.test.test_number }}</td>
+              {% if test_participation.test.description %}
+                <td>{{ test_participation.test.description }}</td>
+              {% else %}
+                <td class="na">N/A</td>
+              {% endif %}
+              <td>{{ test_participation.marks }}</td>
+              <td>{{ test_participation.date|date:"M d, Y" }}</td>
+            </tr>
+          {% endfor %}
+        </table>
       </div>
-      <span class="badge pull-right">3</span>
-      <div class="clearfix"></div>
     </div>
-    <div id="jst" class="panel-body collapse">
-      <table class="table table-condensed detail"> <!-- Admission info panel -->
-        <tr>
-          <th>#</th>
-          <th>Description</th>
-          <th>Obtained Marks</th>
-          <th>Date</th>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>No Description</td>
-          <td>59</td>
-          <td>July 2, 2017</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>No Description</td>
-          <td>59</td>
-          <td>July 2, 2017</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>No Description</td>
-          <td>59</td>
-          <td>July 2, 2017</td>
-        </tr>
-      </table>
-    </div>
-  </div>
-  <div class="panel panel-info" data-toggle="collapse" href="#subject">
-    <div class="panel-heading">
-      <div class="panel-title pull-left">
-        Subject Based Tests
-      </div>
-      <span class="badge pull-right">3</span>
-      <div class="clearfix"></div>
-    </div>
-    <div id="subject" class="panel-body collapse">
-      <table class="table table-condensed detail"> <!-- Admission info panel -->
-        <tr>
-          <th>#</th>
-          <th>Description</th>
-          <th>Obtained Marks</th>
-          <th>Date</th>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>No Description</td>
-          <td>59</td>
-          <td>July 2, 2017</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>No Description</td>
-          <td>59</td>
-          <td>July 2, 2017</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>No Description</td>
-          <td>59</td>
-          <td>July 2, 2017</td>
-        </tr>
-      </table>
-    </div>
-  </div>
+  {% endif %}
+{% endfor %}
 </div>
 {% endblock content %}

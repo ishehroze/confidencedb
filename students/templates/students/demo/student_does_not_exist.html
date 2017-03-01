@@ -1,0 +1,10 @@
+{% extends '../base.html' %}
+
+{% block title %}Student Not Found{% endblock %}
+
+{% block container %}
+  <div class="jumbotron">
+    <h1>{% block heading %}Not Found{% endblock %}</h1>
+    <p>{% block message %}Roll "{{ roll }}" not found in the database{% endblock message %}</p>
+  </div>
+{% endblock container %}

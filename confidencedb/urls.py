@@ -16,9 +16,10 @@ Including another URLconf
 from django.conf.urls import include, url, handler404
 from django.contrib import admin
 from django.views.generic import TemplateView
+from .views import IndexView
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^students/', include('students.urls')),
-    url(r'^$', TemplateView.as_view(template_name="students/jumbotron.html")),
+    url(r'^admin/', admin.site.urls, name='admin'),
+    url(r'^students/', include('students.urls', namespace='students')),
+    url(r'^$', IndexView.as_view(), name='index'),
 ]

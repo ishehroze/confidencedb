@@ -16,6 +16,7 @@ table.detail { margin-bottom: 1em; }
 table.detail tr th, table.detail tr td { border: 0px; }
 table.detail tr th { color: slategray; }
 table.detail tr td { color: dimgray; }
+table.detail td.na { color: #e8eaef; font-style: italic;}
 
 /* Dropdown */
 .dropdown:hover { background: #E7E7E7; }

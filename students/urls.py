@@ -1,17 +1,15 @@
 from django.conf.urls import url
-from django.views.generic import TemplateView
+from . import views
 
 urlpatterns = [
-    url(r'^121445/$', TemplateView.as_view(
-        template_name="students/demo/details.html"
-    ), name='demo_details'),
-    url(r'^121445/attendances/$', TemplateView.as_view(
-        template_name="students/demo/attendances.html"
-    ), name='demo_attendences'),
-    url(r'^121445/tests/$', TemplateView.as_view(
-        template_name="students/demo/tests.html"
-    ), name='demo_tests'),
-    url(r'^121445/sheets/$', TemplateView.as_view(
-        template_name="students/demo/sheets.html"
-    ), name='demo_sheets'),
+	url(r'^$', 
+		views.GetStudentView.as_view(), name='get'), 
+    url(r'^(?P<roll>[A-Za-z0-9]+)/$', 
+    	views.StudentView.as_view(), name='details'),
+    url(r'^(?P<roll>[A-Za-z0-9]+)/attendances/$', 
+    	views.AttendancesView.as_view(), name='attendences'),
+    url(r'^(?P<roll>[A-Za-z0-9]+)/tests/$',
+    	views.TestsView.as_view(), name='tests'),
+    url(r'^(?P<roll>[A-Za-z0-9]+)/sheets/$',
+    	views.SheetsView.as_view(), name='sheets'),
 ]

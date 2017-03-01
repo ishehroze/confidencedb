@@ -1,97 +1,37 @@
 {% extends './demo_base.html' %}
 
-{% block title %}Test Info for 121445{% endblock %}
+{% block title %}{{ student.roll }} | Sheets Received{% endblock %}
 
 {% block sheets_active %}class="active"{% endblock %}
 
 {% block content %}
 <div class="panel-group">
-  <div class="panel panel-info" data-toggle="collapse" href="#bangla">
+{% for category, sheets_received in student.sheets_received_breakdown.items %}
+{% if sheets_received %}
+  <div class="panel panel-info" data-toggle="collapse" href="#{{ category|cut:" "|cut:"&"|lower }}">
     <div class="panel-heading">
       <div class="panel-title pull-left">
-        Bengali Language &amp; Literature
+        {{ category|title }}
       </div>
-      <span class="badge pull-right">3</span>
+      <span class="badge pull-right">{{ sheets_received|length }}</span>
       <div class="clearfix"></div>
     </div>
-    <div id="bangla" class="panel-body collapse">
-      <table class="table table-condensed detail"> <!-- Admission info panel -->
+    <div id="{{ category|cut:" "|cut:"&"|lower }}" class="panel-body collapse">
+      <table class="table table-condensed detail">
         <tr>
           <th>#</th>
           <th>Description</th>
         </tr>
-        <tr>
-          <td>1</td>
-          <td>No Description</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>No Description</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>No Description</td>
-        </tr>
+        {% for sheet_received in sheets_received %}
+          <tr>
+            <td>{{ sheet_received.sheet_number }}</td>
+            <td class="na">N/A</td>
+          </tr>
+        {% endfor %}
       </table>
     </div>
   </div>
-  <div class="panel panel-info" data-toggle="collapse" href="#english">
-    <div class="panel-heading">
-      <div class="panel-title pull-left">
-        English Language &amp; Literature
-      </div>
-      <span class="badge pull-right">3</span>
-      <div class="clearfix"></div>
-    </div>
-    <div id="english" class="panel-body collapse">
-      <table class="table table-condensed detail"> <!-- Admission info panel -->
-        <tr>
-          <th>#</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>No Description</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>No Description</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>No Description</td>
-        </tr>
-      </table>
-    </div>
-  </div>
-  <div class="panel panel-info" data-toggle="collapse" href="#ba">
-    <div class="panel-heading">
-      <div class="panel-title pull-left">
-        Bangladesh Affairs
-      </div>
-      <span class="badge pull-right">3</span>
-      <div class="clearfix"></div>
-    </div>
-    <div id="ba" class="panel-body collapse">
-      <table class="table table-condensed detail"> <!-- Admission info panel -->
-        <tr>
-          <th>#</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>No Description</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>No Description</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>No Description</td>
-        </tr>
-      </table>
-    </div>
-  </div>
+{% endif %}
+{% endfor %}
 </div>
 {% endblock content %}

@@ -13,8 +13,11 @@ from .models import (
     Student,
     AttendanceRecord,
     TestParticipation,
-    SheetDistribution
+    SheetReception
 )
+
+admin.site.site_header = 'Confidence Administration'
+admin.site.site_title = 'Confidence Administration'
 
 # Removing 'delete_selected' from admin page
 admin.site.disable_action('delete_selected')
@@ -26,7 +29,6 @@ def make_paid(modelAdmin, request, queryset):
         obj.save()
 make_paid.short_description = _("Mark selected as Paid")
 
-
 # Custom Filters
 class StatusFilter(admin.SimpleListFilter):
     title = _('status')
@@ -35,6 +37,7 @@ class StatusFilter(admin.SimpleListFilter):
     def lookups(self, request, model_admin):
         return (
             ('overdue', _('Overdue')),
+            ('due', _('Payment Due')),
             ('paid', _('Payment Cleared')),
             ('expired', _('Expired'))
         )
@@ -53,6 +56,11 @@ class StatusFilter(admin.SimpleListFilter):
 
         elif self.value() == 'expired':
             return queryset.filter(expiration_date__lt=today)
+
+        elif self.value() == 'due':
+            return queryset.filter(due_date__gte=today)\
+                .exclude(amount_paid=F('amount_total'))\
+                .exclude(expiration_date__lt=today)
 
         else:
             return queryset
@@ -106,9 +114,9 @@ class StudentAdmin(admin.ModelAdmin):
         'roll',
         'name',
         'department',
+        'payment_status',
+        'validity_days',
         'contact_number',
-        'is_overdue',
-        'is_expired',
     )
 
     list_filter = (
@@ -116,7 +124,7 @@ class StudentAdmin(admin.ModelAdmin):
         'department',
         'student_category',
         'batch',
-        'is_prospective',
+        'admission_date',
         'is_assistive',
         BloodGroupFilter,
     )
@@ -151,23 +159,34 @@ class StudentAdmin(admin.ModelAdmin):
         ]}),
     ]
 
-    actions = (make_paid,)
+    actions = (make_paid, 'delete_selected')
 
 @admin.register(AttendanceRecord)
 class AttendanceRecordAdmin(admin.ModelAdmin):
     list_filter = ('date',)
-    filter_horizontal = ('attending_students',)
+    filter_horizontal = ('students',)
 
 @admin.register(TestParticipation)
 class TestParticipationAdmin(admin.ModelAdmin):
     list_display = ('student', 'test', 'marks')
     list_filter = ('date',)
+    raw_id_fields = ('student', 'test')
+
+@admin.register(Sheet)
+class SheetAdmin(admin.ModelAdmin):
+    list_filter = ('category',)
+
+@admin.register(SheetReception)
+class SheetReceptionAdmin(admin.ModelAdmin):
     raw_id_fields = ('student',)
+    filter_horizontal = ('sheets',)
+
+@admin.register(Test)
+class TestAdmin(admin.ModelAdmin):
+    list_filter = ('category',)
 
 admin.site.register(TestCategory)
-admin.site.register(Test)
 admin.site.register(Batch)
 admin.site.register(Department)
 admin.site.register(StudentCategory)
 admin.site.register(SheetCategory)
-admin.site.register(Sheet)

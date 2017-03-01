@@ -9,22 +9,26 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Confidence</a>
+          <a class="navbar-brand" href="{% url 'index' %}">Confidence</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        {% if user.is_authenticated %}
           <ul class="nav navbar-nav">
-            <li><a href="/">Home <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">Overdue <span class="badge">20</span></a></li>
-            <li><a href="#">Expired <span class="badge">20</span></a></li>
+            <li><a href="{% url 'admin:students_student_changelist' %}?status=overdue">Overdue&nbsp;<span class="badge pull-right">{{ count_overdue }}</span></a></li>
+            <li><a href="{% url 'admin:students_student_changelist' %}?status=expired">Expired&nbsp;<span class="badge pull-right">{{ count_expired }}</span></a></li>
           </ul>
+        {% endif %}
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="/admin/"><span class=" glyphicon glyphicon-user"></span> Sign In</a></li>
+            <li><a href="{% url 'admin:index' %}"><span class=" glyphicon glyphicon-user"></span>&nbsp;&nbsp;{% if user.is_authenticated %}{{ user|capfirst }}{% else %}Sign In{% endif %}</a></li>
           </ul>
-          <form class="navbar-form navbar-right">
+          <form class="navbar-form navbar-right" action="{% url 'students:get' %}" method="get">
             <div class="input-group">
-              <input type="text" class="form-control" placeholder="Enter roll number..." id="roll-field">
+              <input type="text" class="form-control" placeholder="Enter roll number..."
+                     name="roll">
               <span class="input-group-btn">
-                <button class="btn btn-default" type="button" id="roll-search"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                <button class="btn btn-default" type="submit" id="roll-search">
+                  <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                </button>
               </span>
             </div>
           </form>
