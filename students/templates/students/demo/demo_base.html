@@ -13,7 +13,7 @@
       <li role="presentation" {% block attendances_active %}{% endblock %}>
         <a href="{% url 'students:attendences' student.roll %}">Attendences</a>
       </li>
-      <li role="" {% block tests_active %}{% endblock %}>
+      <li role="presentation" {% block tests_active %}{% endblock %}>
         <a href="{% url 'students:tests' student.roll %}">Tests</a>
       </li>
       <li role="presentation" {% block sheets_active %}{% endblock %}>

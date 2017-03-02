@@ -18,18 +18,17 @@ from .models import (
 
 admin.site.site_header = 'Confidence Administration'
 admin.site.site_title = 'Confidence Administration'
-
-# Removing 'delete_selected' from admin page
 admin.site.disable_action('delete_selected')
 
-# Custom action 'make_paid' for admin change list
-def make_paid(modelAdmin, request, queryset):
+
+def make_paid(queryset):
     for obj in queryset:
         obj.amount_paid = obj.amount_total
         obj.save()
+
 make_paid.short_description = _("Mark selected as Paid")
 
-# Custom Filters
+
 class StatusFilter(admin.SimpleListFilter):
     title = _('status')
     parameter_name = 'status'
@@ -64,6 +63,7 @@ class StatusFilter(admin.SimpleListFilter):
 
         else:
             return queryset
+
 
 class BloodGroupFilter(admin.SimpleListFilter):
     title = _('blood group')
@@ -107,7 +107,6 @@ class BloodGroupFilter(admin.SimpleListFilter):
             return queryset
 
 
-# Model Admins and registration
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
     list_display = (
@@ -161,10 +160,12 @@ class StudentAdmin(admin.ModelAdmin):
 
     actions = (make_paid, 'delete_selected')
 
+
 @admin.register(AttendanceRecord)
 class AttendanceRecordAdmin(admin.ModelAdmin):
     list_filter = ('date',)
     filter_horizontal = ('students',)
+
 
 @admin.register(TestParticipation)
 class TestParticipationAdmin(admin.ModelAdmin):
@@ -172,14 +173,17 @@ class TestParticipationAdmin(admin.ModelAdmin):
     list_filter = ('date',)
     raw_id_fields = ('student', 'test')
 
+
 @admin.register(Sheet)
 class SheetAdmin(admin.ModelAdmin):
     list_filter = ('category',)
+
 
 @admin.register(SheetReception)
 class SheetReceptionAdmin(admin.ModelAdmin):
     raw_id_fields = ('student',)
     filter_horizontal = ('sheets',)
+
 
 @admin.register(Test)
 class TestAdmin(admin.ModelAdmin):

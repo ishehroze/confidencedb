@@ -1,25 +1,26 @@
+from datetime import date
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.db.models import F
-from datetime import date
 from .models import Student
 
-from django.core.exceptions import ObjectDoesNotExist
 
 class BaseView(View):
     template_name = "students/jumbotron.html"
-    context = {
-        "count_overdue": Student.objects.filter(due_date__lt=date.today())\
-                .exclude(amount_paid=F('amount_total'))\
-                .exclude(expiration_date__lt=date.today()).count(),
-        "count_expired": Student.objects.filter(
-            expiration_date__lt=date.today()).count(),
-    }
 
     def get_context_data(self, **kwargs):
-        return self.context
+        context = {
+            "count_overdue": Student.objects.filter(due_date__lt=date.today())
+                                    .exclude(amount_paid=F('amount_total'))
+                                    .exclude(expiration_date__lt=date.today()).count(),
+            "count_expired": Student.objects.filter(
+                expiration_date__lt=date.today()).count(),
+        }
+
+        return context
+
 
 class StudentView(BaseView):
     template_name = "students/demo/details.html"
@@ -34,20 +35,24 @@ class StudentView(BaseView):
     def get(self, request, **kwargs):
         try:
             return render(request, self.template_name,
-                self.get_context_data(**kwargs))
+                          self.get_context_data(**kwargs))
         except Student.DoesNotExist:
             template_name = "students/demo/student_does_not_exist.html"
-            self.context["roll"] = kwargs["roll"]
-            return render(request, template_name, self.context)
-        
+            context = {"roll": kwargs["roll"]}
+            return render(request, template_name, context)
+
+
 class AttendancesView(StudentView):
     template_name = "students/demo/attendances.html"
+
 
 class TestsView(StudentView):
     template_name = "students/demo/tests.html"
 
+
 class SheetsView(StudentView):
     template_name = "students/demo/sheets.html"
+
 
 class GetStudentView(StudentView):
     def get(self, request, **kwargs):

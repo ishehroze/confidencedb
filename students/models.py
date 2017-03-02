@@ -3,22 +3,6 @@ from django.urls import reverse_lazy
 from datetime import date
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
-from collections import defaultdict
-
-MONTH_MAPPING = {
-    1: 'Jan',
-    2: 'Feb',
-    3: 'Mar',
-    4: 'Apr',
-    5: 'May',
-    6: 'Jun',
-    7: 'Jul',
-    8: 'Aug',
-    9: 'Sep',
-    10: 'Oct',
-    11: 'Nov',
-    12: 'Dec'
-}
 
 
 # Required models
@@ -26,16 +10,17 @@ class TestCategory(models.Model):
     category = models.CharField(max_length=30, primary_key=True)
 
     def __str__(self):
-        return '%s' % (self.category)
+        return '%s' % self.category
 
     class Meta:
         verbose_name_plural = _("test categories")
         ordering = ["category"]
 
+
 class Test(models.Model):
     category = models.ForeignKey(TestCategory)
     test_number = models.PositiveSmallIntegerField()
-    description = models.TextField(blank=True) # optional
+    description = models.TextField(blank=True)
 
     def __str__(self):
         return '%(category)s %(test_number)d' % {
@@ -47,15 +32,17 @@ class Test(models.Model):
         ordering = ["category", "test_number"]
         unique_together = ("category", "test_number")
 
+
 class SheetCategory(models.Model):
     category = models.CharField(max_length=40, primary_key=True)
 
     def __str__(self):
-        return '%s' % (self.category)
+        return '%s' % self.category
 
     class Meta:
         verbose_name_plural = _("sheet categories")
         ordering = ["category"]
+
 
 class Sheet(models.Model):
     category = models.ForeignKey(SheetCategory)
@@ -71,30 +58,33 @@ class Sheet(models.Model):
         ordering = ["category", "sheet_number"]
         unique_together = ("category", "sheet_number")
 
+
 class Batch(models.Model):
     batch_time = models.TimeField(primary_key=True)
 
     def __str__(self):
-        return '%s' % (self.batch_time)
+        return '%s' % self.batch_time
 
     class Meta:
         verbose_name_plural = _("batches")
         ordering = ["batch_time"]
 
+
 class Department(models.Model):
     department_name = models.CharField(max_length=30, primary_key=True)
 
     def __str__(self):
-        return '%s' % (self.department_name)
+        return '%s' % self.department_name
 
     class Meta:
         ordering = ["department_name"]
+
 
 class StudentCategory(models.Model):
     student_category_name = models.CharField(max_length=2, primary_key=True)
 
     def __str__(self):
-        return '%s' % (self.student_category_name)
+        return '%s' % self.student_category_name
 
     class Meta:
         verbose_name_plural = _("student categories")
@@ -103,34 +93,26 @@ class StudentCategory(models.Model):
 
 # Main models
 class Student(models.Model):
-    BLOOD_GROUPS = (
-        ('Positive (+ve)', (
-                ('o+', 'O+'),
-                ('a+', 'A+'),
-                ('b+', 'B+'),
-                ('ab+', 'AB+')
-            )
-        ),
-        ('Negetive (-ve)', (
-                ('o-', 'O-'),
-                ('a-', 'A-'),
-                ('b-', 'B-'),
-                ('ab-', 'AB-')
-            )
-        )
-    )
+    BLOOD_GROUPS = (('Positive (+ve)', (('o+', 'O+'),
+                                        ('a+', 'A+'),
+                                        ('b+', 'B+'),
+                                        ('ab+', 'AB+'))),
+                    ('Negetive (-ve)', (('o-', 'O-'),
+                                        ('a-', 'A-'),
+                                        ('b-', 'B-'),
+                                        ('ab-', 'AB-'))))
 
     roll = models.CharField(max_length=15, primary_key=True)
     name = models.CharField(max_length=30)
     father_name = models.CharField(max_length=30,
                                    blank=True,
-                                   verbose_name=_("father's name")) # optional
+                                   verbose_name=_("father's name"))
     mother_name = models.CharField(max_length=30,
                                    blank=True,
-                                   verbose_name=_("mother's name")) # optional
+                                   verbose_name=_("mother's name"))
     blood_group = models.CharField(max_length=3,
                                    choices=BLOOD_GROUPS,
-                                   blank=True) # optional
+                                   blank=True)
     contact_number = models.CharField(max_length=15)
     department = models.ForeignKey(Department)
     batch = models.ForeignKey(Batch)
@@ -200,7 +182,7 @@ class Student(models.Model):
 
     def attending_dates(self):
         return self.attendance_record_set.all().values_list('date', 
-            flat=True)
+                                                            flat=True)
 
     def attending_dates_breakdown(self):
         attending_dates = self.attending_dates()
@@ -208,12 +190,9 @@ class Student(models.Model):
         breakdown_by_months = {}
 
         for attending_date in attending_dates:
-            month_dt = date(
-                month = attending_date.month,
-                year = attending_date.year,
-                day = 1
-            )
-            
+            month_dt = date(month=attending_date.month,
+                            year=attending_date.year,
+                            day=1)
             try: 
                 breakdown_by_months[month_dt].append(
                     attending_date)
@@ -256,20 +235,22 @@ class Student(models.Model):
         except ObjectDoesNotExist:
             return sheets_by_category
 
+
 class AttendanceRecord(models.Model):
     date = models.DateField(primary_key=True, default=date.today)
     students = models.ManyToManyField(Student,
-        related_name='attendance_record_set')
+                                      related_name='attendance_record_set')
 
     def __str__(self):
-        return u'Record for %s' % (self.date)
+        return u'Record for %s' % self.date
+
 
 class TestParticipation(models.Model):
     date = models.DateField()
     student = models.ForeignKey(Student,
-        related_name='test_participation_set')
+                                related_name='test_participation_set')
     test = models.ForeignKey(Test,
-        related_name='test_participation_set')
+                             related_name='test_participation_set')
     marks = models.PositiveSmallIntegerField()
 
     def __str__(self):
@@ -279,10 +260,11 @@ class TestParticipation(models.Model):
             "roll": self.student.roll,
         }
 
+
 class SheetReception(models.Model):
     student = models.OneToOneField(Student,
-        related_name='received_sheets')
+                                   related_name='received_sheets')
     sheets = models.ManyToManyField(Sheet)
 
     def __str__(self):
-        return '%s' % (self.student)
+        return '%s' % self.student
