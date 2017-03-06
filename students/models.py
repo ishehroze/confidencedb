@@ -132,7 +132,7 @@ class Student(models.Model):
             "name": self.name,
         }
 
-    def get_absolute_url(self): 
+    def get_absolute_url(self):
         return reverse_lazy('students:details', args=[(str(self.roll))])
 
     def is_expired(self):
@@ -181,7 +181,7 @@ class Student(models.Model):
         return self.amount_total - self.amount_paid
 
     def attending_dates(self):
-        return self.attendance_record_set.all().values_list('date', 
+        return self.attendance_record_set.all().values_list('date',
                                                             flat=True)
 
     def attending_dates_breakdown(self):
@@ -193,7 +193,7 @@ class Student(models.Model):
             month_dt = date(month=attending_date.month,
                             year=attending_date.year,
                             day=1)
-            try: 
+            try:
                 breakdown_by_months[month_dt].append(
                     attending_date)
             except KeyError:
@@ -223,15 +223,15 @@ class Student(models.Model):
             category: [] for category in categories
         }
 
-        try: 
+        try:
             receipts = self.received_sheets.sheets.all()
-            
+
             for category in sheets_by_category:
                 sheets_by_category[category] = \
                     receipts.filter(category=category)
 
             return sheets_by_category
-        
+
         except ObjectDoesNotExist:
             return sheets_by_category
 

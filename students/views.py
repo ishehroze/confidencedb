@@ -14,7 +14,8 @@ class BaseView(View):
         context = {
             "count_overdue": Student.objects.filter(due_date__lt=date.today())
                                     .exclude(amount_paid=F('amount_total'))
-                                    .exclude(expiration_date__lt=date.today()).count(),
+                                    .exclude(expiration_date__lt=date.today()
+                                             ).count(),
             "count_expired": Student.objects.filter(
                 expiration_date__lt=date.today()).count(),
         }
